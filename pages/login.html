@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Log in — SpeedRunner.fit</title>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+</head>
+<body>
+  <div class="auth-page">
+    <div class="auth-card">
+      <a href="/index.html" class="auth-logo">
+        <div class="nav-icon" style="width:28px;height:28px;font-size:14px;">
+          <i class="ti ti-run" style="color:#fff;"></i>
+        </div>
+        Speed<span class="accent">Runner</span>.fit
+      </a>
+      <div class="auth-title">Welcome back</div>
+      <div class="auth-sub">Log in to see your dashboard and submit runs.</div>
+
+      <div class="alert alert-error" id="alert"></div>
+
+      <div class="form-group">
+        <label class="form-label" for="email">Email</label>
+        <input class="form-input" type="email" id="email" placeholder="you@example.com" autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="password">Password</label>
+        <input class="form-input" type="password" id="password" placeholder="••••••••" autocomplete="current-password">
+      </div>
+
+      <button class="btn btn-green btn-full" id="login-btn" onclick="handleLogin()">
+        Log in
+      </button>
+
+      <div class="auth-footer">
+        Don't have an account? <a href="/pages/signup.html">Sign up free</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="/app.js"></script>
+  <script>
+    getSession().then(s => {
+      if (s) window.location.href = '/pages/dashboard.html';
+    });
+
+    async function handleLogin() {
+      hideAlert('alert');
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+
+      if (!email || !password) {
+        showAlert('alert', 'Please enter your email and password.');
+        return;
+      }
+
+      setLoading('login-btn', true, 'Log in');
+
+      const { error } = await db.auth.signInWithPassword({ email, password });
+
+      if (error) {
+        showAlert('alert', 'Incorrect email or password. Please try again.');
+        setLoading('login-btn', false, 'Log in');
+        return;
+      }
+
+      window.location.href = '/pages/dashboard.html';
+    }
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Enter') handleLogin();
+    });
+  </script>
+</body>
+</html>

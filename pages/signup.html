@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign up — SpeedRunner.fit</title>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+</head>
+<body>
+  <div class="auth-page">
+    <div class="auth-card">
+      <a href="/index.html" class="auth-logo">
+        <div class="nav-icon" style="width:28px;height:28px;font-size:14px;">
+          <i class="ti ti-run" style="color:#fff;"></i>
+        </div>
+        Speed<span class="accent">Runner</span>.fit
+      </a>
+      <div class="auth-title">Create your account</div>
+      <div class="auth-sub">Free forever. No credit card needed.</div>
+
+      <div class="alert alert-error" id="alert"></div>
+      <div class="alert alert-success" id="alert-success"></div>
+
+      <div class="form-group">
+        <label class="form-label" for="username">Username</label>
+        <input class="form-input" type="text" id="username" placeholder="JDRunner99" autocomplete="username">
+        <div class="form-error" id="err-username">Username must be at least 3 characters</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="email">Email</label>
+        <input class="form-input" type="email" id="email" placeholder="you@example.com" autocomplete="email">
+        <div class="form-error" id="err-email">Please enter a valid email</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="password">Password</label>
+        <input class="form-input" type="password" id="password" placeholder="At least 8 characters" autocomplete="new-password">
+        <div class="form-error" id="err-password">Password must be at least 8 characters</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="speedrun-username">speedrun.com username <span style="color:rgba(255,255,255,0.3);font-weight:400;">(optional)</span></label>
+        <input class="form-input" type="text" id="speedrun-username" placeholder="Your speedrun.com username">
+      </div>
+
+      <button class="btn btn-green btn-full" id="signup-btn" onclick="handleSignup()">
+        Create account
+      </button>
+
+      <div class="auth-footer">
+        Already have an account? <a href="/pages/login.html">Log in</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="/app.js"></script>
+  <script>
+    // Redirect if already logged in
+    getSession().then(s => {
+      if (s) window.location.href = '/pages/dashboard.html';
+    });
+
+    function validate() {
+      let ok = true;
+      const username = document.getElementById('username').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+
+      document.getElementById('err-username').classList.toggle('visible', username.length < 3);
+      document.getElementById('err-email').classList.toggle('visible', !email.includes('@'));
+      document.getElementById('err-password').classList.toggle('visible', password.length < 8);
+
+      if (username.length < 3 || !email.includes('@') || password.length < 8) ok = false;
+      return ok;
+    }
+
+    async function handleSignup() {
+      hideAlert('alert');
+      if (!validate()) return;
+
+      const username = document.getElementById('username').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const srcUsername = document.getElementById('speedrun-username').value.trim();
+
+      setLoading('signup-btn', true, 'Create account');
+
+      const { data, error } = await db.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            username,
+            speedrun_com_username: srcUsername || null,
+          }
+        }
+      });
+
+      if (error) {
+        showAlert('alert', error.message);
+        setLoading('signup-btn', false, 'Create account');
+        return;
+      }
+
+      // Update profile with speedrun.com username if provided
+      if (srcUsername && data.user) {
+        await db.from('profiles')
+          .update({ speedrun_com_username: srcUsername })
+          .eq('id', data.user.id);
+      }
+
+      showAlert('alert-success', 'Account created! Taking you to your dashboard...', 'success');
+      setTimeout(() => { window.location.href = '/pages/dashboard.html'; }, 1200);
+    }
+
+    // Allow Enter key to submit
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Enter') handleSignup();
+    });
+  </script>
+</body>
+</html>

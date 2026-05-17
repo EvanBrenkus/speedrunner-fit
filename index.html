@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SpeedRunner.fit — PR your PB</title>
+  <meta name="description" content="Speedrun your favourite games while running on a walking pad. Two sports, one score, one leaderboard.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+</head>
+<body>
+
+  <!-- ── Nav ── -->
+  <nav class="nav">
+    <a href="/index.html" class="nav-brand">
+      <div class="nav-icon">
+        <i class="ti ti-run" style="color:#fff;font-size:17px;"></i>
+      </div>
+      Speed<span class="accent">Runner</span>
+    </a>
+    <div class="nav-links">
+      <a href="/pages/leaderboard.html">Leaderboard</a>
+      <a href="#how-it-works">How it works</a>
+      <a href="#formula">The formula</a>
+    </div>
+    <div class="nav-actions" id="nav-actions">
+      <a href="/pages/login.html" class="btn btn-secondary">Log in</a>
+      <a href="/pages/signup.html" class="btn btn-green">Sign up free</a>
+    </div>
+  </nav>
+
+  <!-- ── Hero ── -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-eyebrow">Now in beta — join the first runners</div>
+      <h1>Speed<span class="accent">Runner</span>.fit</h1>
+      <div class="hero-tagline">"PR your PB."</div>
+      <p class="hero-sub">
+        Speedrun your favourite games while running on a walking pad.
+        Two sports. One score. One leaderboard.
+      </p>
+      <div class="hero-cta">
+        <a href="/pages/signup.html" class="btn btn-green btn-lg">Start running free</a>
+        <a href="/pages/leaderboard.html" class="btn btn-secondary btn-lg">See the leaderboard</a>
+      </div>
+      <div class="hero-stats">
+        <div>
+          <span class="hero-stat-num" id="stat-runners">—</span>
+          <span class="hero-stat-label">runners worldwide</span>
+        </div>
+        <div>
+          <span class="hero-stat-num" id="stat-runs">—</span>
+          <span class="hero-stat-label">verified runs</span>
+        </div>
+        <div>
+          <span class="hero-stat-num" id="stat-games">—</span>
+          <span class="hero-stat-label">games tracked</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── How it works ── -->
+  <section class="section" id="how-it-works">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-label">How it works</div>
+        <h2 class="section-title">Two sports. One score.</h2>
+        <p class="section-sub">Any walking pad, any game, any pace. Get moving and get on the board.</p>
+      </div>
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-num">1</div>
+          <div class="step-title">Set up your pad</div>
+          <div class="step-desc">Get on your walking pad or treadmill. Connect your Strava account so your speed and distance are recorded automatically.</div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">2</div>
+          <div class="step-title">Start running and playing</div>
+          <div class="step-desc">Launch your speedrun and start walking or jogging. Record your screen so both the game and treadmill console are visible.</div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">3</div>
+          <div class="step-title">Submit your run</div>
+          <div class="step-desc">Upload your video link, enter your game time and average MPH. A moderator verifies it before it goes live on the leaderboard.</div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">4</div>
+          <div class="step-title">Climb the leaderboard</div>
+          <div class="step-desc">Your score combines game time and running speed. Run faster or play faster — both improve your rank.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Formula ── -->
+  <section class="section section-alt" id="formula">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-label">The formula</div>
+        <h2 class="section-title">Simple, fair, and adjustable</h2>
+        <p class="section-sub">Every game category can set its own weights — but the default is equal: game time and running speed matter equally.</p>
+      </div>
+      <div class="formula-card">
+        <div class="formula">
+          <span class="val">Score</span>
+          <span class="op"> = </span>
+          Game time (min)
+          <span class="op"> ÷ </span>
+          <span class="val">Avg MPH</span>
+        </div>
+        <div class="formula-note">Lower score = better. Finish faster AND run faster to win.</div>
+        <div style="display:flex;gap:32px;justify-content:center;margin-top:28px;flex-wrap:wrap;">
+          <div style="text-align:center;">
+            <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:4px;">Example A — 2hrs at 3 MPH</div>
+            <div style="font-size:20px;font-weight:700;color:#7F77DD;">40.0</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:4px;">Example B — 2hrs at 6 MPH</div>
+            <div style="font-size:20px;font-weight:700;color:#5DCAA5;">20.0 ✓ wins</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Features ── -->
+  <section class="section section-dark">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-label">Features</div>
+        <h2 class="section-title light">Everything you need to compete</h2>
+      </div>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feature-icon" style="background:#EEEDFE;">
+            <i class="ti ti-chart-line" style="color:#534AB7;font-size:20px;"></i>
+          </div>
+          <div class="feature-title">Dual progress tracking</div>
+          <div class="feature-desc">Watch your speedrun PBs and walking pace improve side by side over time. The only platform that tracks both.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background:#E1F5EE;">
+            <i class="ti ti-trophy" style="color:#1D9E75;font-size:20px;"></i>
+          </div>
+          <div class="feature-title">Live leaderboards</div>
+          <div class="feature-desc">Separate boards per game and category, with adjustable speed and time weights set by the community.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background:#EEEDFE;">
+            <i class="ti ti-refresh" style="color:#534AB7;font-size:20px;"></i>
+          </div>
+          <div class="feature-title">Strava sync</div>
+          <div class="feature-desc">Connect Strava once. Every treadmill session auto-imports your speed, distance, and heart rate for verification.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background:#E1F5EE;">
+            <i class="ti ti-shield-check" style="color:#1D9E75;font-size:20px;"></i>
+          </div>
+          <div class="feature-title">Verified runs</div>
+          <div class="feature-desc">Every run is reviewed by community moderators before going live. Video proof + Strava data required.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background:#EEEDFE;">
+            <i class="ti ti-device-gamepad-2" style="color:#534AB7;font-size:20px;"></i>
+          </div>
+          <div class="feature-title">speedrun.com linked</div>
+          <div class="feature-desc">Your speedrun.com PBs sync automatically. No double entry — your gaming history is already here.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background:#E1F5EE;">
+            <i class="ti ti-users" style="color:#1D9E75;font-size:20px;"></i>
+          </div>
+          <div class="feature-title">Community rules</div>
+          <div class="feature-desc">Game categories are community-governed, just like speedrun.com. Runners set the rules, moderators enforce them.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Leaderboard preview ── -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-label">Leaderboard preview</div>
+        <h2 class="section-title">Super Mario 64 — 70 Star</h2>
+        <p class="section-sub">A live look at what the competition looks like. Could you beat these scores?</p>
+      </div>
+      <div style="background:#1A1728;border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,0.06);">
+        <table class="lb-table">
+          <thead>
+            <tr>
+              <th style="width:50px;">Rank</th>
+              <th>Runner</th>
+              <th>Game time</th>
+              <th>Avg MPH</th>
+              <th>Distance</th>
+              <th>Score</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="lb-rank gold">#1</span></td>
+              <td><span class="lb-avatar" style="background:#FAEEDA;color:#633806;">MK</span>MarioKing</td>
+              <td>1:38:00</td><td>3.8</td><td>14.4 mi</td>
+              <td><span class="lb-score">25.79</span></td>
+            </tr>
+            <tr>
+              <td><span class="lb-rank silver">#2</span></td>
+              <td><span class="lb-avatar" style="background:#E1F5EE;color:#085041;">SR</span>SpeedRunner_Z</td>
+              <td>1:41:00</td><td>3.6</td><td>12.2 mi</td>
+              <td><span class="lb-score">28.06</span></td>
+            </tr>
+            <tr>
+              <td><span class="lb-rank bronze">#3</span></td>
+              <td><span class="lb-avatar" style="background:#EEEDFE;color:#3C3489;">PW</span>PaceWalker</td>
+              <td>1:39:00</td><td>3.2</td><td>8.8 mi</td>
+              <td><span class="lb-score">30.94</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="text-align:center;margin-top:20px;">
+        <a href="/pages/leaderboard.html" class="btn btn-outline">View full leaderboard</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CTA ── -->
+  <section class="section" style="background:var(--midnight);text-align:center;">
+    <div class="container">
+      <h2 style="font-size:clamp(28px,5vw,48px);font-weight:700;color:#fff;margin-bottom:12px;">
+        Ready to <span style="color:#5DCAA5;">PR your PB?</span>
+      </h2>
+      <p style="color:rgba(255,255,255,0.5);font-size:16px;margin-bottom:32px;max-width:440px;margin-left:auto;margin-right:auto;">
+        Free to join. All you need is a walking pad and a game you love.
+      </p>
+      <a href="/pages/signup.html" class="btn btn-green btn-lg">Create your free account</a>
+    </div>
+  </section>
+
+  <!-- ── Footer ── -->
+  <footer class="footer">
+    <div class="footer-brand">Speed<span class="accent">Runner</span>.fit</div>
+    <div class="footer-tagline">"PR your PB."</div>
+    <div class="footer-links">
+      <a href="/pages/leaderboard.html">Leaderboard</a>
+      <a href="#how-it-works">How it works</a>
+      <a href="#formula">The formula</a>
+      <a href="/pages/signup.html">Sign up</a>
+    </div>
+    <div class="footer-copy">© 2026 SpeedRunner.fit — built for runners who game, and gamers who run</div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="/app.js"></script>
+  <script>
+    // Load live stats from Supabase
+    async function loadStats() {
+      try {
+        const [{ count: runners }, { count: runs }, { count: games }] = await Promise.all([
+          db.from('profiles').select('*', { count: 'exact', head: true }),
+          db.from('runs').select('*', { count: 'exact', head: true }).eq('status', 'verified'),
+          db.from('games').select('*', { count: 'exact', head: true }),
+        ]);
+        document.getElementById('stat-runners').textContent = (runners || 0).toLocaleString();
+        document.getElementById('stat-runs').textContent = (runs || 0).toLocaleString();
+        document.getElementById('stat-games').textContent = (games || 0).toLocaleString();
+      } catch (e) {
+        // Stats are decorative on landing page — fail silently
+        ['stat-runners','stat-runs','stat-games'].forEach(id => {
+          document.getElementById(id).textContent = '—';
+        });
+      }
+    }
+
+    // Update nav if user is already logged in
+    async function updateNav() {
+      const session = await getSession();
+      if (session) {
+        document.getElementById('nav-actions').innerHTML = `
+          <a href="/pages/dashboard.html" class="btn btn-secondary">My dashboard</a>
+          <button class="btn btn-green" onclick="signOut()">Log out</button>
+        `;
+      }
+    }
+
+    loadStats();
+    updateNav();
+  </script>
+</body>
+</html>

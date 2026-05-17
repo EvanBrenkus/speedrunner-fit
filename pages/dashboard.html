@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — SpeedRunner.fit</title>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+</head>
+<body style="background:var(--midnight);">
+
+  <nav class="nav">
+    <a href="/index.html" class="nav-brand">
+      <div class="nav-icon"><i class="ti ti-run" style="color:#fff;font-size:17px;"></i></div>
+      Speed<span class="accent">Runner</span>
+    </a>
+    <div class="nav-links" style="color:rgba(255,255,255,0.65);">
+      <a href="/pages/leaderboard.html">Leaderboard</a>
+      <a href="/pages/dashboard.html" style="color:#fff;">My dashboard</a>
+    </div>
+    <div class="nav-actions">
+      <span id="nav-username" style="font-size:13px;color:rgba(255,255,255,0.5);margin-right:4px;"></span>
+      <button class="btn btn-secondary" onclick="signOut()">Log out</button>
+    </div>
+  </nav>
+
+  <div class="dashboard-layout">
+
+    <aside class="sidebar">
+      <a href="/pages/dashboard.html" class="sidebar-link active">
+        <i class="ti ti-layout-dashboard" style="font-size:16px;"></i> Overview
+      </a>
+      <a href="#submit" class="sidebar-link" onclick="showSection('submit')">
+        <i class="ti ti-plus" style="font-size:16px;"></i> Submit a run
+      </a>
+      <a href="#my-runs" class="sidebar-link" onclick="showSection('my-runs')">
+        <i class="ti ti-list" style="font-size:16px;"></i> My runs
+      </a>
+      <a href="/pages/leaderboard.html" class="sidebar-link">
+        <i class="ti ti-trophy" style="font-size:16px;"></i> Leaderboard
+      </a>
+    </aside>
+
+    <main class="main-content">
+
+      <!-- Overview section -->
+      <div id="section-overview">
+        <div class="page-title" id="welcome-title">Welcome back!</div>
+        <div class="page-sub">Here's how you're tracking across both disciplines.</div>
+
+        <div class="stat-grid">
+          <div class="stat-card">
+            <div class="stat-label">Best SRR score</div>
+            <div class="stat-value green" id="stat-best-score">—</div>
+            <div class="stat-delta">lower is better</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Total runs</div>
+            <div class="stat-value purple" id="stat-total-runs">—</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Miles logged</div>
+            <div class="stat-value" id="stat-miles">—</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Verified runs</div>
+            <div class="stat-value green" id="stat-verified">—</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">
+            <i class="ti ti-list" style="font-size:15px;color:#7F77DD;"></i>
+            Recent runs
+          </div>
+          <div id="recent-runs-list">
+            <div style="text-align:center;padding:32px;color:rgba(255,255,255,0.3);font-size:13px;">
+              No runs yet — <a href="#" onclick="showSection('submit')" style="color:#7F77DD;">submit your first run</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">
+            <i class="ti ti-user" style="font-size:15px;color:#1D9E75;"></i>
+            Your profile
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;font-size:13px;">
+            <div>
+              <div style="color:rgba(255,255,255,0.4);margin-bottom:4px;">Username</div>
+              <div style="color:#fff;font-weight:500;" id="profile-username">—</div>
+            </div>
+            <div>
+              <div style="color:rgba(255,255,255,0.4);margin-bottom:4px;">speedrun.com</div>
+              <div style="color:#7F77DD;" id="profile-src">Not linked</div>
+            </div>
+            <div>
+              <div style="color:rgba(255,255,255,0.4);margin-bottom:4px;">Strava</div>
+              <div id="profile-strava" style="color:rgba(255,255,255,0.4);">Not connected</div>
+            </div>
+            <div>
+              <div style="color:rgba(255,255,255,0.4);margin-bottom:4px;">Member since</div>
+              <div style="color:#fff;" id="profile-since">—</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Submit run section -->
+      <div id="section-submit" style="display:none;">
+        <div class="page-title">Submit a run</div>
+        <div class="page-sub">Fill in your run details. A moderator will verify it before it goes live.</div>
+
+        <div class="card" style="max-width:560px;">
+          <div class="alert alert-error" id="submit-alert"></div>
+          <div class="alert alert-success" id="submit-success"></div>
+
+          <div class="form-group">
+            <label class="form-label" for="game-select">Game</label>
+            <select class="form-select" id="game-select"></select>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+            <div class="form-group">
+              <label class="form-label" for="game-time">Game time (h:mm:ss)</label>
+              <input class="form-input" type="text" id="game-time" placeholder="1:42:07">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="avg-mph">Average MPH</label>
+              <input class="form-input" type="number" id="avg-mph" placeholder="3.4" step="0.1" min="0.5" max="15">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="distance">Distance (miles)</label>
+            <input class="form-input" type="number" id="distance" placeholder="9.7" step="0.1" min="0">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="video-url">Video URL <span style="color:rgba(255,255,255,0.3);font-weight:400;">(YouTube or similar — must show game + treadmill + body)</span></label>
+            <input class="form-input" type="url" id="video-url" placeholder="https://youtube.com/watch?v=...">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="strava-url">Strava activity URL <span style="color:rgba(255,255,255,0.3);font-weight:400;">(optional but recommended)</span></label>
+            <input class="form-input" type="url" id="strava-url" placeholder="https://strava.com/activities/...">
+          </div>
+
+          <div id="score-preview" style="background:rgba(29,158,117,0.08);border:1px solid rgba(29,158,117,0.2);border-radius:8px;padding:14px;margin-bottom:18px;display:none;">
+            <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:4px;">Your SRR score will be</div>
+            <div style="font-size:28px;font-weight:700;color:#5DCAA5;" id="preview-score">—</div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px;">lower is better</div>
+          </div>
+
+          <button class="btn btn-green btn-full" id="submit-btn" onclick="handleSubmit()">
+            Submit run for verification
+          </button>
+        </div>
+      </div>
+
+      <!-- My runs section -->
+      <div id="section-my-runs" style="display:none;">
+        <div class="page-title">My runs</div>
+        <div class="page-sub">All your submitted runs and their verification status.</div>
+        <div class="card">
+          <div id="all-runs-list">
+            <div style="text-align:center;padding:32px;color:rgba(255,255,255,0.3);font-size:13px;">Loading...</div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="/app.js"></script>
+  <script>
+    let currentUser = null;
+    let currentProfile = null;
+
+    async function init() {
+      const session = await requireAuth();
+      if (!session) return;
+      currentUser = session.user;
+
+      // Load profile
+      const { data: profile } = await db
+        .from('profiles')
+        .select('*')
+        .eq('id', currentUser.id)
+        .single();
+
+      currentProfile = profile;
+
+      if (profile) {
+        document.getElementById('welcome-title').textContent = `Welcome back, ${profile.username}!`;
+        document.getElementById('nav-username').textContent = profile.username;
+        document.getElementById('profile-username').textContent = profile.username;
+        document.getElementById('profile-src').textContent = profile.speedrun_com_username || 'Not linked';
+        document.getElementById('profile-since').textContent =
+          new Date(profile.created_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+      }
+
+      loadStats();
+      loadRecentRuns();
+      loadGames();
+    }
+
+    async function loadStats() {
+      const { data: runs } = await db
+        .from('runs')
+        .select('score, distance_miles, status')
+        .eq('user_id', currentUser.id);
+
+      if (!runs) return;
+      const verified = runs.filter(r => r.status === 'verified');
+      const bestScore = verified.length
+        ? Math.min(...verified.map(r => parseFloat(r.score))).toFixed(2)
+        : '—';
+      const totalMiles = runs.reduce((s, r) => s + parseFloat(r.distance_miles || 0), 0).toFixed(1);
+
+      document.getElementById('stat-best-score').textContent = bestScore;
+      document.getElementById('stat-total-runs').textContent = runs.length;
+      document.getElementById('stat-miles').textContent = totalMiles + ' mi';
+      document.getElementById('stat-verified').textContent = verified.length;
+    }
+
+    async function loadRecentRuns() {
+      const { data: runs } = await db
+        .from('runs')
+        .select('*, games(name, category)')
+        .eq('user_id', currentUser.id)
+        .order('submitted_at', { ascending: false })
+        .limit(5);
+
+      const container = document.getElementById('recent-runs-list');
+      if (!runs || runs.length === 0) return;
+
+      container.innerHTML = runs.map(r => `
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:13px;">
+          <div>
+            <div style="font-weight:500;color:#fff;">${r.games?.name || '—'} <span style="font-weight:400;color:rgba(255,255,255,0.4);">${r.games?.category || ''}</span></div>
+            <div style="color:rgba(255,255,255,0.4);font-size:11px;margin-top:2px;">${secondsToDisplay(r.game_time_seconds)} · ${parseFloat(r.avg_mph).toFixed(1)} MPH · ${parseFloat(r.distance_miles).toFixed(1)} mi</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;">
+            <span style="font-weight:700;color:#5DCAA5;">${parseFloat(r.score).toFixed(2)}</span>
+            <span class="badge badge-${r.status}">${r.status}</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    async function loadAllRuns() {
+      const { data: runs } = await db
+        .from('runs')
+        .select('*, games(name, category)')
+        .eq('user_id', currentUser.id)
+        .order('submitted_at', { ascending: false });
+
+      const container = document.getElementById('all-runs-list');
+      if (!runs || runs.length === 0) {
+        container.innerHTML = `<div style="text-align:center;padding:32px;color:rgba(255,255,255,0.3);font-size:13px;">No runs yet.</div>`;
+        return;
+      }
+      container.innerHTML = runs.map(r => `
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:13px;">
+          <div>
+            <div style="font-weight:500;color:#fff;">${r.games?.name || '—'} <span style="font-weight:400;color:rgba(255,255,255,0.4);">${r.games?.category || ''}</span></div>
+            <div style="color:rgba(255,255,255,0.4);font-size:11px;margin-top:2px;">
+              ${secondsToDisplay(r.game_time_seconds)} · ${parseFloat(r.avg_mph).toFixed(1)} MPH · ${parseFloat(r.distance_miles).toFixed(1)} mi
+              · ${new Date(r.submitted_at).toLocaleDateString()}
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;">
+            <span style="font-weight:700;color:#5DCAA5;">${parseFloat(r.score).toFixed(2)}</span>
+            <span class="badge badge-${r.status}">${r.status}</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    async function loadGames() {
+      const { data: games } = await db.from('games').select('*').order('name');
+      const select = document.getElementById('game-select');
+      if (!games) return;
+      select.innerHTML = games.map(g =>
+        `<option value="${g.id}">${g.name} — ${g.category}</option>`
+      ).join('');
+    }
+
+    // Live score preview
+    function updateScorePreview() {
+      const time = document.getElementById('game-time').value;
+      const mph = parseFloat(document.getElementById('avg-mph').value);
+      const preview = document.getElementById('score-preview');
+      if (!time || !mph || mph <= 0) { preview.style.display = 'none'; return; }
+      try {
+        const seconds = displayToSeconds(time);
+        if (seconds <= 0) { preview.style.display = 'none'; return; }
+        const score = calcScore(seconds, mph);
+        document.getElementById('preview-score').textContent = formatScore(score);
+        preview.style.display = 'block';
+      } catch(e) { preview.style.display = 'none'; }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('game-time').addEventListener('input', updateScorePreview);
+      document.getElementById('avg-mph').addEventListener('input', updateScorePreview);
+    });
+
+    async function handleSubmit() {
+      hideAlert('submit-alert');
+      const gameId = document.getElementById('game-select').value;
+      const gameTime = document.getElementById('game-time').value.trim();
+      const avgMph = parseFloat(document.getElementById('avg-mph').value);
+      const distance = parseFloat(document.getElementById('distance').value);
+      const videoUrl = document.getElementById('video-url').value.trim();
+      const stravaUrl = document.getElementById('strava-url').value.trim();
+
+      if (!gameTime || !avgMph || !distance || !videoUrl) {
+        showAlert('submit-alert', 'Please fill in all required fields.');
+        return;
+      }
+
+      const gameTimeSeconds = displayToSeconds(gameTime);
+      if (gameTimeSeconds <= 0 || avgMph <= 0 || distance <= 0) {
+        showAlert('submit-alert', 'Please enter valid numbers for time, speed, and distance.');
+        return;
+      }
+
+      setLoading('submit-btn', true, 'Submit run for verification');
+
+      const { error } = await db.from('runs').insert({
+        user_id: currentUser.id,
+        game_id: gameId,
+        game_time_seconds: gameTimeSeconds,
+        avg_mph: avgMph,
+        distance_miles: distance,
+        video_url: videoUrl,
+        strava_activity_url: stravaUrl || null,
+        status: 'pending',
+      });
+
+      setLoading('submit-btn', false, 'Submit run for verification');
+
+      if (error) {
+        showAlert('submit-alert', 'Something went wrong: ' + error.message);
+        return;
+      }
+
+      showAlert('submit-success', 'Run submitted! A moderator will review it shortly.', 'success');
+      document.getElementById('game-time').value = '';
+      document.getElementById('avg-mph').value = '';
+      document.getElementById('distance').value = '';
+      document.getElementById('video-url').value = '';
+      document.getElementById('strava-url').value = '';
+      document.getElementById('score-preview').style.display = 'none';
+      loadStats();
+    }
+
+    function showSection(name) {
+      ['overview','submit','my-runs'].forEach(s => {
+        document.getElementById('section-' + s).style.display = s === name ? 'block' : 'none';
+      });
+      document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+      if (name === 'my-runs') loadAllRuns();
+    }
+
+    init();
+  </script>
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leaderboard — SpeedRunner.fit</title>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+</head>
+<body style="background:var(--midnight);min-height:100vh;">
+
+  <nav class="nav">
+    <a href="/index.html" class="nav-brand">
+      <div class="nav-icon"><i class="ti ti-run" style="color:#fff;font-size:17px;"></i></div>
+      Speed<span class="accent">Runner</span>
+    </a>
+    <div class="nav-links">
+      <a href="/pages/leaderboard.html" class="active" style="color:#fff;">Leaderboard</a>
+      <a href="/index.html#how-it-works">How it works</a>
+      <a href="/index.html#formula">The formula</a>
+    </div>
+    <div class="nav-actions" id="nav-actions">
+      <a href="/pages/login.html" class="btn btn-secondary">Log in</a>
+      <a href="/pages/signup.html" class="btn btn-green">Sign up free</a>
+    </div>
+  </nav>
+
+  <div class="lb-header">
+    <div style="font-size:22px;font-weight:700;color:#fff;margin-bottom:4px;">
+      <i class="ti ti-trophy" style="color:#EF9F27;margin-right:8px;font-size:20px;"></i>
+      Global leaderboard
+    </div>
+    <div style="font-size:13px;color:rgba(255,255,255,0.45);">Score = game time (min) ÷ avg MPH — lower is better</div>
+    <div class="lb-filters">
+      <button class="lb-filter-btn active" onclick="filterGame('all', this)">All games</button>
+      <div id="game-filter-btns"></div>
+    </div>
+  </div>
+
+  <div style="padding:24px 32px;">
+    <div id="lb-loading" style="text-align:center;padding:60px;color:rgba(255,255,255,0.35);font-size:14px;">
+      <i class="ti ti-loader" style="font-size:24px;display:block;margin-bottom:8px;"></i>
+      Loading runs...
+    </div>
+    <div style="background:var(--midnight-2);border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,0.06);display:none;" id="lb-wrap">
+      <table class="lb-table">
+        <thead>
+          <tr>
+            <th style="width:60px;">Rank</th>
+            <th>Runner</th>
+            <th>Game</th>
+            <th>Time</th>
+            <th>MPH</th>
+            <th>Distance</th>
+            <th>Score</th>
+          </tr>
+        </thead>
+        <tbody id="lb-body"></tbody>
+      </table>
+    </div>
+    <div id="lb-empty" style="display:none;text-align:center;padding:60px;color:rgba(255,255,255,0.35);font-size:14px;">
+      No verified runs yet for this game. <a href="/pages/signup.html" style="color:#7F77DD;">Be the first!</a>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="/app.js"></script>
+  <script>
+    let allRuns = [];
+    let games = [];
+    const medals = ['gold','silver','bronze'];
+
+    async function loadLeaderboard() {
+      // Load games for filter buttons
+      const { data: gamesData } = await db.from('games').select('*').order('name');
+      games = gamesData || [];
+
+      const filterContainer = document.getElementById('game-filter-btns');
+      filterContainer.innerHTML = games.map(g =>
+        `<button class="lb-filter-btn" onclick="filterGame('${g.id}', this)">${g.name}</button>`
+      ).join('');
+
+      // Load verified runs with profile and game info
+      const { data: runs, error } = await db
+        .from('runs')
+        .select(`
+          id, game_time_seconds, avg_mph, distance_miles, score, submitted_at,
+          profiles(username),
+          games(name, category)
+        `)
+        .eq('status', 'verified')
+        .order('score', { ascending: true })
+        .limit(100);
+
+      document.getElementById('lb-loading').style.display = 'none';
+
+      if (error || !runs || runs.length === 0) {
+        document.getElementById('lb-empty').style.display = 'block';
+        return;
+      }
+
+      allRuns = runs;
+      renderRuns(runs);
+    }
+
+    function renderRuns(runs) {
+      const tbody = document.getElementById('lb-body');
+      if (!runs || runs.length === 0) {
+        document.getElementById('lb-wrap').style.display = 'none';
+        document.getElementById('lb-empty').style.display = 'block';
+        return;
+      }
+
+      document.getElementById('lb-wrap').style.display = 'block';
+      document.getElementById('lb-empty').style.display = 'none';
+
+      tbody.innerHTML = runs.map((run, i) => {
+        const rank = i + 1;
+        const rankClass = i < 3 ? medals[i] : '';
+        const username = run.profiles?.username || 'Unknown';
+        const gameName = run.games?.name || '—';
+        const category = run.games?.category || '';
+        const score = parseFloat(run.score).toFixed(2);
+        const time = secondsToDisplay(run.game_time_seconds);
+        const mph = parseFloat(run.avg_mph).toFixed(1);
+        const dist = parseFloat(run.distance_miles).toFixed(1);
+
+        return `
+          <tr>
+            <td><span class="lb-rank ${rankClass}">#${rank}</span></td>
+            <td>${renderAvatar(username)} ${username}</td>
+            <td style="color:rgba(255,255,255,0.55);font-size:13px;">${gameName}<br><span style="font-size:11px;color:rgba(255,255,255,0.3);">${category}</span></td>
+            <td>${time}</td>
+            <td>${mph} MPH</td>
+            <td>${dist} mi</td>
+            <td><span class="lb-score">${score}</span></td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function filterGame(gameId, btn) {
+      document.querySelectorAll('.lb-filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      if (gameId === 'all') {
+        renderRuns(allRuns);
+      } else {
+        const filtered = allRuns.filter(r => r.games && games.find(g => g.id === gameId && g.name === r.games.name));
+        renderRuns(filtered);
+      }
+    }
+
+    async function updateNav() {
+      const session = await getSession();
+      if (session) {
+        document.getElementById('nav-actions').innerHTML = `
+          <a href="/pages/dashboard.html" class="btn btn-secondary">My dashboard</a>
+          <button class="btn btn-green" onclick="signOut()">Log out</button>
+        `;
+      }
+    }
+
+    loadLeaderboard();
+    updateNav();
+  </script>
+</body>
+</html>
