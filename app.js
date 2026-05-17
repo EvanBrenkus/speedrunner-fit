@@ -7,7 +7,7 @@
 // For local development, replace these strings with your actual values
 // NEVER commit real keys — use Netlify environment variables in production
 const SUPABASE_URL = window.ENV_SUPABASE_URL || 'https://hnudrsuobqzedpptmosa.supabase.co';
-const SUPABASE_ANON_KEY = window.ENV_SUPABASE_ANON_KEY || 'YeyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhudWRyc3VvYnF6ZWRwcHRtb3NhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkwMDQ2NDEsImV4cCI6MjA5NDU4MDY0MX0.WxGV4d6Ew4U8cXiZVcpgW40gClJ7-';
+const SUPABASE_ANON_KEY = window.ENV_SUPABASE_ANON_KEY || 'YeyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhudWRyc3VvYnF6ZWRwcHRtb3NhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkwMDQ2NDEsImV4cCI6MjA5NDU4MDY0MX0.WxGV4d6Ew4U8cXiZVcpgW40gClJ7';
 
 // Initialise Supabase client
 const { createClient } = supabase;
